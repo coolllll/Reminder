@@ -1,0 +1,9 @@
+body , html {
+	margin:0px;
+}
+#head_tab {
+	width:100%;
+	background-color:#4AC;
+	color:white;
+	text-align:right;
+}
