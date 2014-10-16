@@ -4,15 +4,105 @@
         <title>Hello Title !!!</title>
         <meta charset="utf-8" />
         <link type="text/css" href="res/global.css" rel="stylesheet">
+        <style>
+            body {
+                background-color:#FF6472;
+                text-align:center;
+            }
+            #headTxt {
+                font-size:5em;
+                color:white;
+                text-align:center;
+                margin-top:50px;
+                margin-bottom:30px;
+            }
+            .form {
+                background-color:white;
+                display:inline-block;
+                padding:10px;
+                color:black;
+                margin:auto;
+                width:700px;
+                border-radius:30px;
+                border:1px solid black;
+                font-size:2em;
+                vertical-align:top;
+            }
+            .form p {
+                font-size:1.5em;
+                color:red;
+            }
+            .form input {
+                font-size:1.5em;
+            }
+            .form td {
+                padding-left:10px;
+                padding-right:10px;
+            }
+            .buttonRow {
+                margin-left:20px;
+            }
+            .button {
+                display:inline-block;
+                border:1px solid black;
+                padding:15px;
+                margin-top:10px;
+                margin-bottom:10px;
+                border-radius:5px;
+                background-color:#ACF;
+                cursor:pointer;
+                transition:background-color linear 0.25s;
+                text-align:center;
+            }
+            .button:hover {
+                background-color:#AFC;
+            }
+        </style>
     </head>
+    <script src="jquery.js"></script>
     <body>
-        <div id="head_tab">
-            <div style="padding:5px;">
-            User : <input type="text"> Pw : <input type="password">
-            <input type="button" value="Login">
+        <div id="headTxt">Fakebook</div>
+        <div class="form">
+            <p>Login</p>
+            <table>
+                <tr>
+                    <td>Username</td>
+                    <td> <input type="text"> </td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                    <td> <input type="password"> </td>
+                </tr>
+            </table>
+            <div class="buttonRow">
+                <div class="button" onclick="alert('Sorry, a wild bug has appeared')">Login to super awesome website</div>
+            </div>
+            -or-
+            <div class="buttonRow">
+                <div class="button">Facebook</div>
+                <div class="button">G+</div>
+                <div class="button">PalmOS</div>
             </div>
         </div>
-        Hello world !!! <br>
-        
+        <div class="form">
+            <p>Register</p>
+            <table>
+                <tr>
+                    <td>Username</td>
+                    <td> <input type="text"> </td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                    <td> <input type="password"> </td>
+                </tr>
+                <tr>
+                    <td>Confirm</td>
+                    <td> <input type="password"> </td>
+                </tr>
+            </table>
+            <div class="buttonRow">
+                <div class="button">Register to the amazing website</div>
+            </div>
+        </div>
     </body>
 </html>
