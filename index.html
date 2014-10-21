@@ -435,12 +435,16 @@
             if(updateHP() == false) return;
             window.setTimeout(startTurn,2300);
         }
+        var images = new Array();
         function preloadImage()
         {
-            var img = new Image();
             for(var i = 0;i < 6;i++) {
-                img.src = "pokemonRes/"+bugAttackIcon[i];
-                img.src = "pokemonRes/"+actionIcon[i];
+                images[i] = new Image();
+                images[i].src = "pokemonRes/"+bugAttackIcon[i];
+            }
+            for(var j = 0;j < 6;j++) {
+                images[j+6] = new Image();
+                images[j+6].src = "pokemonRes/"+actionIcon[j];
             }
         }
         preloadImage();
