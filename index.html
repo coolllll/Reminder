@@ -5,9 +5,13 @@
         <meta charset="utf-8" />
         <link type="text/css" href="res/global.css" rel="stylesheet">
         <style>
+            .hidden {
+                display:none !important;
+            }
             body {
                 background-color:#FF6472;
                 text-align:center;
+                overflow:hidden;
             }
             #headTxt {
                 font-size:5em;
@@ -57,6 +61,101 @@
             .button:hover {
                 background-color:#AFC;
             }
+            #fadeTable {
+                height:100%;
+                width:100%;
+                position:absolute;
+                top:0px;
+                left:0px;
+                border-collapse:collapse;
+            }
+            #fadeTable td {
+                transition:background-color linear 0.5s;
+            }
+            #pokemonArea {
+                position:absolute;
+                background-color:white;
+                z-index:10;
+                top:0px;
+                left:0px;
+                width:100%;
+                height:100%;
+            }
+            #bugDiv,#playerDiv {
+                height:35%;
+                position:relative;
+                display:block;
+                overflow:hidden;
+            }
+            #bugDiv {
+                text-align:right;
+            }
+            #playerDiv {
+                text-align:left;
+            }
+            #bugStat,#playerStat {
+                display:inline-block;
+                width:500px;
+                vertical-align:top;
+                padding:35px;
+                font-size:3em;
+            }
+            #bugHP_out,#playerHP_out {
+                width:500px;
+                border:1px solid black;
+                height:20px;
+                margin-top:5px;
+                border-radius:2px;
+            }
+            #bugHP_out {
+                background-color:green;
+            }
+            #playerHP {
+                width:100%;
+                background-color:green;
+                height:20px;
+                transition:width linear 0.5s;
+            }
+            #bugHP {
+                width:0%;
+                background-color:white;
+                height:20px;
+                transition:width linear 0.5s;
+            }
+            #messageDiv {
+                width:50%;
+                height:20%;
+                font-size:40px;
+                display:inline-block;
+                border:2px solid black;
+                padding:5px;
+                vertical-align:top;
+                text-align:left;
+            }
+            #actionDiv {
+                vertical-align:top;
+                width:40%;
+                display:inline-block;
+            }
+            .btn {
+                width:45%;
+                font-size:2em;
+                padding:5px;
+                margin:5px;
+                border:1px solid green;
+                display:inline-block;
+                cursor:pointer;
+            }
+            .btn:hover {
+                background-color:#CFD;
+            }
+            .vHidden {
+                visibility:hidden;
+            }
+            .attackElem {
+                position:absolute;
+                z-index:20;
+            }
         </style>
     </head>
     <script src="jquery.js"></script>
@@ -75,7 +174,7 @@
                 </tr>
             </table>
             <div class="buttonRow">
-                <div class="button" onclick="alert('Sorry, a wild bug has appeared')">Login to super awesome website</div>
+                <div class="button" onclick="startPokemon()">Login to super awesome website</div>
             </div>
             -or-
             <div class="buttonRow">
@@ -104,5 +203,238 @@
                 <div class="button">Register to the amazing website</div>
             </div>
         </div>
+        <div id="pokemonArea" class="hidden">
+            <div id="bugDiv" class="noWidth">
+                <div id="bugStat" class="hidden">
+                    Bug
+                    <div id="bugHP_out">
+                        <div id="bugHP"></div>
+                    </div>
+                    HP : <span id="bugHP_txt">100</span>
+                </div>
+                <img src="pokemonRes/bug.png" style="height:100%;">
+            </div>
+            <div id="playerDiv" class="noWidth">
+                <img src="pokemonRes/programmer.png" style="height:100%;">
+                <div id="playerStat" class="hidden">
+                    You
+                    <div id="playerHP_out">
+                        <div id="playerHP"></div>
+                    </div>
+                    HP : <span id="playerHP_txt">100</span>
+                </div>
+            </div>
+            <div id="messageDiv"></div>
+            <div id="actionDiv" class="vHidden">
+                <div class="btn" onclick="action(this,1)">Login</div>
+                <div class="btn" onclick="action(this,2)">Code</div>
+                <div class="btn" onclick="action(this,3)">Call backend</div>
+                <div class="btn" onclick="action(this,4)">SQL injection</div>
+                <div class="btn" onclick="action(this,5)">Debug</div>
+                <div class="btn" onclick="action(this,6)">Escape</div>
+            </div>
+        </div>
+        <audio id="startAudio" src="pokemonRes/pokemonStart.mp3" preload="auto">
+
+        </audio>
+        <audio id="loopAudio" loop src="pokemonRes/pokemonLoop.mp3" preload="auto">
+            
+        </audio>
+        <audio id="deathAudio" src="pokemonRes/sound_death.wav" preload="auto">
+            
+        </audio>
     </body>
+    <script>
+        function elem(id)
+        {
+            return document.getElementById(id);
+        }
+        var tableElem;
+        var fadeLoop;
+        var fadeNow;
+        function initFadeTable()
+        {
+            // 10*6
+            bugHP = playerHP = 100;
+            elem("bugStat").className = "hidden";
+            elem("playerStat").className = "hidden";
+            fadeNow = 0;
+            updateHP();
+            tableElem = document.createElement("table");
+            tableElem.setAttribute("id","fadeTable");
+            var inHTML = "";
+            for(var i = 0;i < 6;i++) {
+                inHTML += "<tr>";
+                for(var j = 0;j < 10;j++) {
+                    inHTML += "<td id='fade"+(i*10+j)+"'> </td>";
+                }
+                inHTML += "</tr>";
+            }
+            tableElem.innerHTML = inHTML;
+            document.body.appendChild(tableElem);
+        }
+        function pokeSoundStart()
+        {
+            elem("loopAudio").currentTime = 0;
+            elem("loopAudio").play();
+        }
+        function startPokemon()
+        {
+            elem("startAudio").play();
+            window.setTimeout(pokeSoundStart,3120);
+            initFadeTable();
+            // loop fade
+            fadeLoop = window.setInterval("fadeTable()",35);
+        }
+        function fadeTable()
+        {
+            document.getElementById("fade"+fadeNow).style.backgroundColor = "black";
+            fadeNow++;
+            if(fadeNow >= 60) {
+                window.clearInterval(fadeLoop);
+                window.setTimeout(fadeDone,750);
+            }
+        }
+        function poke_logMessage(msg)
+        {
+            elem("messageDiv").innerHTML = msg;
+        }
+        //fadeDone();
+        function startTurn()
+        {
+            poke_logMessage("What the hell should you do ?");
+            elem("actionDiv").className = "";
+        }
+        function fadeDone()
+        {
+            // get players on stage
+            elem("pokemonArea").className = "";
+            elem("bugDiv").style.right = "100%";
+            elem("playerDiv").style.left = "100%";
+            $("#bugDiv").animate({right:"20px"},1300);
+            $("#playerDiv").animate({left:"20px"},1300,
+                function(){
+                    elem("bugStat").className = "";
+                    elem("playerStat").className = "";}
+                    );
+            window.setTimeout(startTurn,2000);
+            poke_logMessage("A wild bug has appeared !");
+        }
+        var actionIcon = ["login.jpg","code.png","call.jpg","inject.jpg","debug.png",""];
+        var actionResp = [
+        "It doesn't work ...",
+        "It's not very effective, more bugs has appeared",
+        "Backend is sick ...",
+        "It doesn't work ... SQL code isn't finished yet ...",
+        "It doesn't work well ... You got confused by your own code ...", 
+        "You can't escape from bug !!!"];
+        var actionDamage = [2,-20,0,3,5,0];
+        var attackElem;
+        var attackIndex;
+        var bugHP,playerHP;
+        function closeGame()
+        {
+            $(tableElem).fadeOut(500,function(){tableElem.parentNode.removeChild(tableElem);});
+            $("#pokemonArea").animate({ opacity: 0 },500,function(){
+                elem("pokemonArea").className = "hidden"
+                elem("pokemonArea").style.opacity = "1";
+                elem("playerDiv").style.opacity = "1";
+                });
+        }
+        function faint()
+        {
+            $("#playerDiv").animate({ opacity: 0 },1000);
+            elem("loopAudio").pause();
+            elem("deathAudio").play();
+            poke_logMessage("You lose !! No one can beat bug !!");
+            window.setTimeout(closeGame,4800);
+        }
+        function updateHP()
+        {
+            elem("bugHP").style.width = ""+Math.max(0,Math.min(100-bugHP,100))+"%";
+            elem("playerHP").style.width = ""+Math.max(0,playerHP)+"%";
+            elem("bugHP_txt").innerHTML = ""+bugHP;
+            elem("playerHP_txt").innerHTML = ""+Math.max(0,playerHP);
+            if(playerHP <= 0) {
+                window.setTimeout(faint,1800);
+                return false;
+            }
+            return true;
+        }
+        function attackComplete()
+        {
+            attackElem.parentNode.removeChild(attackElem);
+            poke_logMessage(actionResp[attackIndex-1]);
+            bugHP -= actionDamage[attackIndex-1];
+            updateHP();
+            window.setTimeout(bugAttack,1800);
+        }
+        function action(e,i)
+        {
+            elem("actionDiv").className = "vHidden";
+            attackIndex = i;
+            poke_logMessage("You use "+e.textContent+" !");
+            attackElem = document.createElement("img");
+            attackElem.setAttribute("src","pokemonRes/"+actionIcon[i-1]);
+            attackElem.setAttribute("width","250");
+            attackElem.className = "attackElem";
+            document.body.appendChild(attackElem);
+            if(i == 6) {
+                attackElem.style.left = "100%";
+                attackElem.style.top = "100%";
+                window.setTimeout(attackComplete,750);
+            }
+            else if(i == 3) {
+                // still call animation
+                attackElem.style.left = "20%";
+                attackElem.style.top = "45%";
+                window.setTimeout(attackComplete,1250);
+            }
+            else {
+                // animation
+                attackElem.style.left = "0%";
+                attackElem.style.top = "45%";
+                $(attackElem).animate({left:"80%",top:"5%"},1250,attackComplete);
+            }
+        }
+        var bugAttackIcon = ["semicolon.jpg","uglyCode.png","errorMsg.png","slowCom.gif","yzime.png","typo.png"];
+        var bugAttackName = ["Forget semicolon","Ugly code","Lots of error message","Slow computer","yzi.me ban","Typo"];
+        var bugAttackResp = [
+        "It's very effective !! 300 errors created !",
+        "It's super effective !! You are confused with ugly code",
+        "It's so effective !",
+        "It's very effective !! Your computer is as slow as school's computer !",
+        "It's effective ! Your website is suspended for 24 hours due to high CPU usage",
+        "It's effective ! You have to spend 3 hours finding that typo"];
+        var bugAttackDamage = [12,16,10,25,26,11];
+        function bugAttack()
+        {
+            var attack = Math.floor(Math.random()*6);
+            attackDbg++;
+            poke_logMessage("Bug use "+bugAttackName[attack]+" !");
+            attackElem = document.createElement("img");
+            attackElem.setAttribute("src","pokemonRes/"+bugAttackIcon[attack]);
+            attackElem.setAttribute("width","250");
+            attackElem.className = "attackElem";
+            document.body.appendChild(attackElem);
+            attackElem.style.left = "80%";
+            attackElem.style.top = "5%";
+            attackIndex = attack+1;
+            $(attackElem).animate({left:"0%",top:"45%"},1250,bugComplete);
+        }
+        function bugComplete()
+        {
+            attackElem.parentNode.removeChild(attackElem);
+            poke_logMessage(bugAttackResp[attackIndex-1]);
+            if(attackIndex == 3) {
+                alert("Error message");
+                alert("Another error message");
+                alert("More error message");
+                alert("Even more error message");
+            }
+            playerHP -= bugAttackDamage[attackIndex-1];
+            if(updateHP() == false) return;
+            window.setTimeout(startTurn,2300);
+        }
+    </script>
 </html>
