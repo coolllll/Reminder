@@ -4,8 +4,8 @@
 	$name = $_POST("user");
 	$pass = $_POST("pass");
 	$toret[];
-	$toret['stat']=0;
-	return json_encode($toret);
+	//$toret['stat']=0;
+	//return json_encode($toret);
 	if(mysqli_query($conn,"SELECT * FROM loginsys WHERE user='$user'"))
 	{
 		$toret['stat']=0;
