@@ -1,8 +1,8 @@
 <?php
 	include "connect.php";
 	$conn = connToServ();
-	$name = $_POST("user");
-	$pass = $_POST("pass");
+	$name = $_POST["user"];
+	$pass = $_POST["pass"];
 	$toret[];
 	//$toret['stat']=0;
 	//return json_encode($toret);
@@ -12,7 +12,7 @@
 	}
 	else 
 	{
-		$sql = "INSERT INTO loginsys(user,pass) VALUE ('$user','MD5($pass)')";
+		$sql = "INSERT INTO loginsys(user,pass) VALUES ('$user','MD5($pass)')";
 		mysqli_query($conn, $sql);
 		$toret['stat']=1;
 	}
