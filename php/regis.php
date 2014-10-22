@@ -16,5 +16,5 @@
 		mysqli_query($conn, $sql);
 		$toret['stat']=1;
 	}
-	return json_encode($toret);
+	echo json_encode($toret);
 ?>
